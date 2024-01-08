@@ -1,0 +1,249 @@
+---
+title: "Uređivanje podataka"
+output: html_document
+date: "2024-01-05"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(gridExtra)
+library(GGally)
+library(psych)
+library(ggplot2)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Više informacija o stupcima**
+
+Broj nedostajućih vrijednosti za svaki stupac
+
+```{r}
+na_vrijednosti <- sapply(data, function(x) sum(is.na(x)))
+na_vrijednosti
+```
+
+Detalji o numeričkim stupcima
+
+```{r}
+describe(data[,c("duration", "director_facebook_likes", "actor_1_facebook_likes", "actor_2_facebook_likes", "actor_3_facebook_likes", "num_user_for_reviews", "num_critic_for_reviews", "num_voted_users", "cast_total_facebook_likes", "movie_facebook_likes", "facenumber_in_poster", "title_year", "gross", "budget", "imdb_score")])
+```
+
+
+```{r}
+skim(data)
+```
+
+
+```{r}
+ggplot(data, aes(x = imdb_score)) +
+  geom_histogram(bins=10, fill = "purple", color = "white", na.rm = TRUE) +
+  labs(title = "Ocjena filma", x = "IMDb score", y = "Broj filmova")
+```
+
+
+*Histogram trajanja filmova*
+
+```{r}
+
+mean_duration <- mean(data$duration, na.rm = TRUE)
+min_duration <- min(data$duration, na.rm = TRUE)
+max_duration <- max(data$duration, na.rm = TRUE)
+
+cat("Srednje trajanje filma:", mean_duration %>% round(2), "\n")
+cat("Najkraće trajanje filma:", min_duration %>% round(2), "\n")
+cat("Najduže trajanje filma:", max_duration %>% round(2), "\n")
+
+ggplot(data, aes(x = duration)) +
+  geom_histogram(binwidth=10, fill = "purple", color = "white", na.rm = TRUE) +
+  labs(title = "Trajanje filmova", x = "Trajanje (minute)", y = "Broj filmova")
+
+```
+
+
+```{r}
+
+p75_duration <- quantile(data$duration, 0.75, na.rm = TRUE)
+
+ggplot(data, aes(x = duration)) +
+  geom_histogram(binwidth = 10, fill = "purple", color = "white", na.rm = TRUE) +
+  scale_x_continuous(limits = c(0, p75_duration + 50)) +  # Povećajte ograničenje x-osi
+  labs(title = "Trajanje filmova 75% kvantil", x = "Trajanje (minute)", y = "Broj filmova")
+
+```
+
+*Redatelji s najviše filmova*
+
+```{r}
+
+director_table <- table(data$director_name)
+director_counts_df <- as.data.frame(director_table)
+colnames(director_counts_df) <- c("Director", "Movie_Count")
+
+director_counts_df <- director_counts_df[order(-director_counts_df$Movie_Count), ]
+
+head(director_counts_df, 5)
+
+```
+
+*Glumci s najviše filmova*
+
+```{r}
+
+actors <- data %>%
+  select(actor_1_name, actor_2_name, actor_3_name) %>%
+  gather(key = "actor_number", value = "actor_name") %>%
+  filter(!is.na(actor_name)) %>%
+  select(actor_name)
+
+actor_table <- table(actors$actor_name)
+actor_counts_df <- as.data.frame(actor_table)
+colnames(actor_counts_df) <- c("Actor", "Movie_Count")
+
+actor_counts_df <- actor_counts_df[order(-actor_counts_df$Movie_Count), ]
+
+head(actor_counts_df,5)
+
+```
+
+*Buđet <-> ocjena*
+
+```{r}
+
+quantile_budget <- quantile(data$budget, 0.75, na.rm = TRUE)
+
+subset_data <- data[data$budget < quantile_budget, ]
+
+ggplot(subset_data, aes(x = budget, y = imdb_score)) +
+  geom_point(color = "purple", size = 1) +
+  labs(x = "Buđet (dolari)",
+       y = "IMDb Score")
+
+```
+
+*Filmovi u boji - crnobijeli*
+
+```{r}
+ggplot(na.omit(data), aes(x = color)) +
+  geom_histogram(fill = "purple", color = "white", stat="count") +
+  labs(x = "Boja", y = "Broj filmova")
+```
+
+*Država snimanja*
+
+```{r}
+
+country_counts <- data %>%
+  group_by(country) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+top_countries <- country_counts %>%
+  slice(1:5)
+
+other_countries <- country_counts %>%
+  slice(6:n()) %>%
+  summarise(country = "Other", count = sum(count))
+
+final_data <- bind_rows(top_countries, other_countries)
+
+ggplot(final_data, aes(x = country, y = count)) +
+  geom_bar(stat = "identity", fill = "purple", color = "white") +
+  labs(title = "Država snimanja", x = "Država", y = "Broj filmova")
+
+```
+
+*Jezik filma*
+
+```{r}
+
+language_counts <- data %>%
+  group_by(language) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+top_languages <- language_counts %>%
+  slice(1:5)
+
+other_languages <- language_counts %>%
+  slice(6:n()) %>%
+  summarise(language = "Other", count = sum(count))
+
+final_data <- bind_rows(top_languages, other_languages)
+
+ggplot(final_data, aes(x = language, y = count)) +
+  geom_bar(stat = "identity", fill = "purple", color = "white") +
+  labs(title = "Jezik filma", x = "Jezik", y = "Broj filmova")
+
+```
+
+*Recenzije <-> loše recenzije*
+
+```{r}
+
+quantile_reviews <- quantile(data$num_user_for_reviews, 0.75, na.rm = TRUE)
+quantile_critic <- quantile(data$num_critic_for_reviews, 0.75, na.rm = TRUE)
+
+subset_data <- data[data$num_user_for_reviews < quantile_reviews & data$num_critic_for_reviews < quantile_critic, ]
+
+ggplot(subset_data, aes(x = num_user_for_reviews, y = num_critic_for_reviews)) +
+  geom_point(color = "purple", size = 1) +
+  labs(
+       x = "Broj recenzija",
+       y = "Broj loših recenzija")
+  
+```
+
+*Broj recenzija <-> ocjena* 
+
+```{r}
+  
+quantile_reviews <- quantile(data$num_user_for_reviews, 0.75, na.rm = TRUE)
+
+subset_data <- data[data$num_user_for_reviews < quantile_reviews, ]
+
+ggplot(subset_data, aes(x = num_user_for_reviews, y = imdb_score)) +
+  geom_point(color = "purple", size = 1) +
+  labs(x = "Broj recenzija",
+       y = "IMDb Score")
+
+```
+
+*Loše recenzije <-> ocjena*
+
+```{r}
+  
+ggplot(data, aes(x = num_critic_for_reviews, y = imdb_score)) +
+  geom_point(color = "purple", size = 1) +
+  labs(x = "Broj loših recenzija",
+       y = "IMDb Score")
+
+```
+
+*Broj glasova <-> ocjena*
+
+```{r}
+
+ggplot(data, aes(x = num_voted_users, y = imdb_score)) +
+  geom_point(color = "purple", size = 1) +
+  labs(x = "Broj glasova",
+       y = "IMDb Score")
+
+```
+
+*Broj recenzija <-> broj ocjena*
+
+```{r}
+
+quantile_reviews <- quantile(data$num_user_for_reviews, 0.75, na.rm = TRUE)
+quantile_voted <- quantile(data$num_voted_users, 0.75, na.rm = TRUE)
+
+subset_data <- data[data$num_user_for_reviews < quantile_reviews & data$num_voted_users < quantile_voted, ]
+
+ggplot(subset_data, aes(x = num_user_for_reviews, y = num_voted_users)) +
+  geom_point(color = "purple", size = 1) +
+  labs(x = "Broj recenzija",
+       y = "Broj glasova")
+  
+```
+
