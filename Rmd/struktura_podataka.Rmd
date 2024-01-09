@@ -106,7 +106,7 @@ head(actor_counts_df,5)
 
 ```
 
-*Buđet <-> ocjena*
+*Budžet <-> ocjena*
 
 ```{r}
 
@@ -116,7 +116,7 @@ subset_data <- data[data$budget < quantile_budget, ]
 
 ggplot(subset_data, aes(x = budget, y = imdb_score)) +
   geom_point(color = "purple", size = 1) +
-  labs(x = "Buđet (dolari)",
+  labs(x = "Budžet (dolari)",
        y = "IMDb Score")
 
 ```
