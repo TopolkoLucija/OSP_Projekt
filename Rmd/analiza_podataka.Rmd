@@ -1,0 +1,117 @@
+---
+title: "Analiza podataka"
+output: html_document
+date: "2024-01-08"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(gridExtra)
+library(GGally)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data <- read_csv("../data/IMDB_movie_dataset_tidy.csv")
+```
+
+*Najpopularniji glumci po broju Facebook likeova*
+
+```{r}
+actors_and_likes <- data[, c('actor_1_name', 'actor_1_facebook_likes')]
+actors_and_likes <- data[c('actor_2_name', 'actor_2_facebook_likes')] %>% rename(actor_1_name = actor_2_name) %>% rename(actor_1_facebook_likes = actor_2_facebook_likes) %>% rbind(actors_and_likes)
+actors_and_likes <- data[c('actor_3_name', 'actor_3_facebook_likes')] %>% rename(actor_1_name = actor_3_name) %>% rename(actor_1_facebook_likes = actor_3_facebook_likes) %>% rbind(actors_and_likes) %>% rename(Actor_name = actor_1_name) %>% rename(likes = actor_1_facebook_likes) 
+
+actors_and_likes %>% group_by(Actor_name) %>% summarise(max_likes = max(likes)) %>% arrange(desc(max_likes)) %>% head(5)
+
+```
+
+*Filmovi sa najpopularnijim castingom prema broju Facebook likeova*
+
+```{r}
+data %>%  arrange(desc(cast_total_facebook_likes)) %>% select(movie_title, title_year, imdb_score, cast_total_facebook_likes) %>% head(5)
+```
+
+*Boj filmova po godini premijere*
+
+```{r}
+years_and_count <- data %>% group_by(title_year) %>% summarise(count = n())
+
+ggplot(years_and_count, aes(x = title_year, y = count)) +
+  geom_bar(stat = "identity", fill = "purple", color = "white") +
+  labs(title = "Broj filmova po godini premijere", x = "Godina", y = "Broj filmova")
+
+```
+
+*Broj filmova po žanru*
+
+```{r}
+genre_and_count <- data[, c('movie_title', 'genres')] %>% separate_rows(genres, sep = "\\|") %>% group_by(genres) %>% summarise(count = n())
+
+ggplot(genre_and_count, aes(x = genres, y = count)) +
+  geom_bar(stat = "identity", fill = "purple", color = "white") +
+  labs(title = "Broj filmova po žanru", x = "Žanr", y = "Broj filmova") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+*Popularnost žanra Drama po godinama*
+
+```{r}
+year_and_count_drama <- data[, c('title_year', 'genres')] %>% separate_rows(genres, sep = "\\|") %>% filter(genres == 'Drama') %>% group_by(title_year) %>% summarise(count = n())
+
+ggplot(year_and_count_drama, aes(x = title_year, y = count)) +
+  geom_line(color = "purple", size = 0.8) +
+  labs(title = "Popularnost žanra Drama po godinama", x = "Godina", y = "Broj filmova")
+```
+
+*Najčešće korištene ključne riječi za opis radnje filmova*
+
+```{r}
+genre_and_count <- data[, c('movie_title', 'plot_keywords')] %>% separate_rows(plot_keywords, sep = "\\|") %>% group_by(plot_keywords) %>% rename(keyword = plot_keywords) %>% summarise(count = n()) %>% arrange(desc(count)) %>% filter(!is.na(keyword)) %>% slice_head(n = 20)
+genre_and_count
+```
+
+*Prosječni iznos budžeta za film po godinama*
+
+Iznosi budžeta prilagođeni su iznosima za 2016. godinu koristeći [podatke o inflaciji](https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1913-).
+
+```{r}
+years <- c(1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016)
+cpi <- c(10.9, 12.8, 15.0, 17.3, 20.0, 17.9, 16.8, 17.1, 17.1, 17.5, 17.7, 17.4, 17.2, 17.2, 16.7, 15.2, 13.6, 12.9, 13.4, 13.7, 13.9, 14.4, 14.1, 13.9, 14.0, 14.7, 16.3, 17.3, 17.6, 18.0, 19.5, 22.3, 24.0, 23.8, 24.1, 26.0, 26.6, 26.8, 26.9, 26.8, 27.2, 28.1, 28.9, 29.2, 29.6, 29.9, 30.3, 30.6, 31.0, 31.5, 32.5, 33.4, 34.8, 36.7, 38.8, 40.5, 41.8, 44.4, 49.3, 53.8, 56.9, 60.6, 65.2, 72.6, 82.4, 90.9, 96.5, 99.6, 103.9, 107.6, 109.6, 113.6, 118.3, 124.0, 130.7, 136.2, 140.3, 144.5, 148.2, 152.4, 156.9, 160.5, 163.0, 166.6, 172.2, 177.1, 179.9, 184.0, 188.9, 195.3, 201.6, 207.3, 215.3, 214.5, 218.1, 224.9, 229.6, 233.0, 236.7, 237.0, 240.0)
+
+cpi_data <- data.frame(year = years, cpi = cpi)
+
+budgets <- data[, c('title_year', 'budget')] %>% rename(year = title_year) %>% filter(!is.na(budget))
+
+merge <-  merge(budgets, cpi_data, by = "year")
+
+merge$real_budget <- merge$budget * cpi_data$cpi[cpi_data$year == 2016] / merge$cpi
+
+year_and_avg_budget <-merge %>% group_by(year) %>% summarise(avg = mean(real_budget))
+
+ggplot(year_and_avg_budget, aes(x = year, y = avg)) +
+  geom_line(color = "purple", size = 0.8) +
+  labs(title = "Prosječni budžet filma po godinama", x = "Godina", y = "Prosječni budžet") +
+  scale_y_continuous(labels = scales::comma)
+
+```
+
+*Broj filmova po godinama i najčešćim proporcijama filmske slike*
+
+```{r}
+
+ratios <- c(1.33, 1.37, 1.66, 1.78, 1.85, 2.35, 16.0)
+
+year_aspect_ratio <-  data[!is.na(data$aspect_ratio) & !is.na(data$title_year), c('movie_title', 'title_year', 'aspect_ratio')] %>% filter(aspect_ratio %in% ratios) %>% group_by(aspect_ratio, title_year) %>% summarise(movie_count = n())
+
+ggplot(year_aspect_ratio, aes(x = title_year, y = movie_count, color = as.factor(aspect_ratio))) +
+  geom_line(size = 0.8) +
+  labs(title = "Broj filmova po godinama po najčešćim proporcijama filmske slike", x = 'Godina', y = "Broj filmova") +
+  scale_color_discrete(name = "Proporcije filmske slike")
+
+```
+
+
+
+
