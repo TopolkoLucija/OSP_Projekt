@@ -105,13 +105,35 @@ ratios <- c(1.33, 1.37, 1.66, 1.78, 1.85, 2.35, 16.0)
 
 year_aspect_ratio <-  data[!is.na(data$aspect_ratio) & !is.na(data$title_year), c('movie_title', 'title_year', 'aspect_ratio')] %>% filter(aspect_ratio %in% ratios) %>% group_by(aspect_ratio, title_year) %>% summarise(movie_count = n())
 
-ggplot(year_aspect_ratio, aes(x = title_year, y = movie_count, color = as.factor(aspect_ratio))) +
+my_plot <- ggplot(year_aspect_ratio, aes(x = title_year, y = movie_count, color = as.factor(aspect_ratio))) +
   geom_line(size = 0.8) +
   labs(title = "Broj filmova po godinama po najčešćim proporcijama filmske slike", x = 'Godina', y = "Broj filmova") +
-  scale_color_discrete(name = "Proporcije filmske slike")
+  scale_color_discrete(name = "Proporcije filmske slike") + facet_wrap(~aspect_ratio, scales = "free_y", ncol = 2)
 
+my_plot
+
+# Set the width and height for saving
+width <- 10
+height <- 10
+
+ggsave("output_ggplot.png", plot = my_plot, width = width, height = height)
 ```
 
 
+*Imdb ocjene filmova Stevena Spielberga ("najpoznatiji" redatelj) po godinama i dodatno podaci o novijim filmovima (od 2017. do 2022.)*
+
+```{r}
+spielberg_data <- data[data$director_name == 'Steven Spielberg' & !is.na(data$director_name), c('imdb_score', 'title_year')] 
+
+
+new_data <- data.frame(title_year = c(2017, 2018, 2021, 2022), imdb_score = c(7.2, 7.4, 7.1, 7.5))
+
+ggplot() +
+  geom_point(data = spielberg_data, aes(x = title_year, y = imdb_score), color = 'purple') +
+  geom_smooth(data = spielberg_data, aes(x = title_year, y = imdb_score), method = 'loess', linetype = 4, color = "purple", se = FALSE, size = 0.8) +
+  geom_point(data = new_data, aes(x = title_year, y = imdb_score), color = 'pink') +
+  geom_smooth(data = new_data, aes(x = title_year, y = imdb_score), method = 'lm', linetype = 2, color = "pink", se = FALSE, size = 0.8) +
+  labs(title = "Imdb ocjena po godinama", x = "Godina", y = "Imdb ocjena")
+```
 
 
