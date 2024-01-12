@@ -130,10 +130,43 @@ new_data <- data.frame(title_year = c(2017, 2018, 2021, 2022), imdb_score = c(7.
 
 ggplot() +
   geom_point(data = spielberg_data, aes(x = title_year, y = imdb_score), color = 'purple') +
-  geom_smooth(data = spielberg_data, aes(x = title_year, y = imdb_score), method = 'loess', linetype = 4, color = "purple", se = FALSE, size = 0.8) +
+  geom_smooth(data = spielberg_data, aes(x = title_year, y = imdb_score), method = 'loess', linetype = 2, color = "purple", se = FALSE, size = 0.8) +
   geom_point(data = new_data, aes(x = title_year, y = imdb_score), color = 'pink') +
   geom_smooth(data = new_data, aes(x = title_year, y = imdb_score), method = 'lm', linetype = 2, color = "pink", se = FALSE, size = 0.8) +
   labs(title = "Imdb ocjena po godinama", x = "Godina", y = "Imdb ocjena")
+```
+
+
+*Najveće prosječne IMDB ocjene filmova po državama za države za koje je zapisano barem 50 filmova*
+
+```{r}
+country_and_score <- data[!is.na(data$country) & !is.na(data$imdb_score), c('country', 'imdb_score')] %>% group_by(country) %>% summarise(avg_score = mean(imdb_score), count = n()) %>% filter(count > 50) %>% arrange(desc(avg_score)) 
+
+country_and_score
+```
+
+*Najčešća starosna ograničenja filmova*
+
+`R` =  17+, `PG-13` = 13+, `PG` = 8+
+
+```{r}
+data[!is.na(data$content_rating), "content_rating"] %>% group_by(content_rating) %>% summarise(count = n()) %>% arrange(desc(count)) %>% slice_head(n = 3)
+```
+
+
+*Postotak filmova koji su ostvarili manje prihoda od iznosa budžeta za film*
+
+--> prilagoditi y os da pokazuje od 0.0
+
+```{r}
+year_budget_vs_income <- data[!is.na(data$title_year) & !is.na(data$budget) & !is.na(data$gross), c("title_year", "budget", "gross")] %>% group_by(title_year) %>%
+  summarise(smaller_income = sum(gross < budget, na.rm = TRUE), total = n()) %>% filter(total > 50) %>% mutate(ratio = smaller_income/total)
+
+ggplot(year_budget_vs_income, aes(x = title_year, y = ratio)) +
+  geom_line(color = "purple", size = 0.8) +
+  labs(title = "Postotak filmova za koje je prihod bio manji od budžeta", x = "Godina", y = "Udio filmova") +
+  scale_y_continuous(labels = scales::comma)
+
 ```
 
 
