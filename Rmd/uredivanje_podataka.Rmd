@@ -67,6 +67,16 @@ Variable Name  | 	Description
 data$color <- factor(data$color, levels = c("Color", "Black and White"))
 ```
 
+Micanje duplikata:
+
+```{r}
+sum(duplicated(data))
+```
+```{r}
+data <- distinct(data)
+```
+
+
 Eksportiranje podataka:
 
 ```{r}
