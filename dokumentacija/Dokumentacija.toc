@@ -1,0 +1,4 @@
+\babel@toc {croatian}{}\relax 
+\contentsline {chapter}{\numberline {1}Prediktivni modeli primjenom strojnog učenja}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Priprema podataka}{2}{section.1.1}%
+\contentsline {chapter}{Indeks slika i dijagrama}{9}{chapter*.2}%

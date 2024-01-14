@@ -18,11 +18,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+
+
 columns <- c('duration', 'director_facebook_likes', 'actor_1_facebook_likes','actor_2_facebook_likes', 'actor_3_facebook_likes', 'num_user_for_reviews', 'num_critic_for_reviews', 'num_voted_users', 'cast_total_facebook_likes', 'movie_facebook_likes', 'facenumber_in_poster', 'color', 'title_year', 'language', 'country', 'content_rating', 'aspect_ratio', 'gross', 'budget', 'imdb_score')
 
 mldata <- data[,columns]
 
 mldata <- na.omit(mldata)
+
+
 ```
 
 ```{r}
@@ -42,8 +46,8 @@ sum(apply(mldata, 1, function(x) any(is.na(x))))
 
 
 ```{r}
-mldata$score <- ifelse(mldata$imdb_score < 3.33, "bad", ifelse(mldata$imdb_score < 6.66, "medium", "good"))
-mldata$score <- factor(mldata$score, levels = c("bad", "medium", "good"))
+mldata$score <- ifelse(mldata$imdb_score < 3.33, "loš", ifelse(mldata$imdb_score < 6.66, "osrednji", "dobar"))
+mldata$score <- factor(mldata$score, levels = c("loš", "osrednji", "dobar"))
 summary(mldata$score)
 mldata$imdb_score <- NULL
 ```
@@ -53,7 +57,7 @@ table(mldata$score)
 
 ggplot(mldata, aes(x = score)) +
   geom_histogram(fill = "purple", color = "white", stat="count") +
-  labs(x = "Uspjeh", y = "Broj filmova", title = "Podjela filmova po uspješnosti prije balansiranja skupova")
+  labs(x = "Uspjeh", y = "Broj filmova")
 ```
 
 
@@ -86,19 +90,20 @@ importance(Model_rf)
 
 
 ```{r}
-bad <- mldata[mldata$score=="bad",]
-medium <- mldata[mldata$score=="medium",]
-good <- mldata[mldata$score=="good",]
+bad <- mldata[mldata$score=="loš",]
+medium <- mldata[mldata$score=="osrednji",]
+good <- mldata[mldata$score=="dobar",]
 ```
 
 
 ```{r}
+library(ROSE)
 over <- rbind(good, bad)
-oversample <- ovun.sample(score~., data = over, method = "both", N = 3962)$data
+oversample <- ovun.sample(score~., data = over, method = "both", N = 3932)$data
 ```
 
 ```{r}
-mldata <- rbind(mldata[mldata$score=="medium",], oversample)
+mldata <- rbind(mldata[mldata$score=="osrednji",], oversample)
 ```
 
 ```{r}
@@ -134,14 +139,16 @@ confusionMatrix(predict(Model, testing_set), testing_set$score)
 Model_rf <- randomForest(score ~ ., data = training_set, ntree = 500, importance = TRUE)
 confusionMatrix(predict(Model_rf, testing_set), testing_set$score)
 importance(Model_rf)
+varImpPlot(Model_rf, col = "blue", pch = 19, cex = 1, scale = TRUE)
+
 ```
 
 ```{r}
 ggplot(mldata, aes(duration)) + 
-  geom_histogram(bins = 100, position = "dodge") + facet_wrap(score~.)
+  geom_histogram(bins = 100, position = "dodge") + facet_wrap(score~.) + labs(x = "Trajanje", y = "Broj filmova") + scale_x_continuous(limits = c(60, quantile(data$duration, 0.98, na.rm = TRUE)))
 ```
 
 ```{r}
 ggplot(mldata, aes(num_critic_for_reviews)) + 
-  geom_histogram(bins = 100, position = "dodge") + facet_wrap(score~.)
+  geom_histogram(bins = 100, position = "dodge") + facet_wrap(score~.) + labs(x = "Broj negativnih recenzija", y = "Broj filmova") 
 ```

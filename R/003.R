@@ -1,0 +1,1 @@
+mldata$score <- ifelse(mldata$imdb_score < 3.33, "los", ifelse(mldata$imdb_score < 6.66, "osrednji", "dobar"))
