@@ -1,4 +1,7 @@
 \babel@toc {croatian}{}\relax 
 \contentsline {chapter}{\numberline {1}Prediktivni modeli primjenom strojnog učenja}{2}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Priprema podataka}{2}{section.1.1}%
-\contentsline {chapter}{Indeks slika i dijagrama}{9}{chapter*.2}%
+\contentsline {section}{\numberline {1.2}Modeli s nebalansiranim skupom podataka}{3}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Modeli s balansiranim skupom podataka}{5}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Atributi najznačajniji za predviđanje}{8}{section.1.4}%
+\contentsline {chapter}{Indeks slika i dijagrama}{11}{chapter*.2}%

@@ -145,10 +145,26 @@ varImpPlot(Model_rf, col = "blue", pch = 19, cex = 1, scale = TRUE)
 
 ```{r}
 ggplot(mldata, aes(duration)) + 
-  geom_histogram(bins = 100, position = "dodge") + facet_wrap(score~.) + labs(x = "Trajanje", y = "Broj filmova") + scale_x_continuous(limits = c(60, quantile(data$duration, 0.98, na.rm = TRUE)))
+  geom_histogram(bins = 100, position = "dodge", fill="purple" ) + facet_wrap(score~.) + labs(x = "Trajanje", y = "Broj filmova") + scale_x_continuous(limits = c(60, quantile(data$duration, 0.98, na.rm = TRUE)))
 ```
 
 ```{r}
 ggplot(mldata, aes(num_critic_for_reviews)) + 
-  geom_histogram(bins = 100, position = "dodge") + facet_wrap(score~.) + labs(x = "Broj negativnih recenzija", y = "Broj filmova") 
+  geom_histogram(bins = 100, position = "dodge", fill="purple") + facet_wrap(score~.) + labs(x = "Broj negativnih recenzija", y = "Broj filmova") 
 ```
+
+```{r}
+mldata_filtered <- mldata[mldata$num_critic_for_reviews <= mldata$num_user_for_reviews & is.numeric(mldata$num_critic_for_reviews) &  is.numeric(mldata$num_user_for_reviews), ]
+
+# Računanje postotka loših recenzija
+mldata_filtered$percentage_negative_reviews <- with(mldata_filtered, 
+    ifelse(num_user_for_reviews == 0, 0, (num_critic_for_reviews / num_user_for_reviews) * 100)
+)
+
+# Stvaranje grafikona
+ggplot(mldata_filtered, aes(x = percentage_negative_reviews)) +
+  geom_histogram(bins = 100, position = "dodge", fill = "purple") +
+  facet_wrap(~score) +
+  labs(x = "Postotak loših recenzija", y = "Broj filmova")
+```
+
