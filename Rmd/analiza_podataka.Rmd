@@ -37,9 +37,15 @@ data %>%  arrange(desc(cast_total_facebook_likes)) %>% select(movie_title, title
 ```{r}
 years_and_count <- data %>% group_by(title_year) %>% summarise(count = n())
 
-ggplot(years_and_count, aes(x = title_year, y = count)) +
+broj_filmova_po_godini <-  ggplot(years_and_count, aes(x = title_year, y = count)) +
   geom_bar(stat = "identity", fill = "purple", color = "white") +
-  labs(title = "Broj filmova po godini premijere", x = "Godina", y = "Broj filmova")
+  labs(x = "Godina", y = "Broj filmova")
+
+broj_filmova_po_godini
+
+
+ggsave("broj_filmova_po_godini.png", plot = broj_filmova_po_godini)
+
 
 ```
 
@@ -48,10 +54,11 @@ ggplot(years_and_count, aes(x = title_year, y = count)) +
 ```{r}
 genre_and_count <- data[, c('movie_title', 'genres')] %>% separate_rows(genres, sep = "\\|") %>% group_by(genres) %>% summarise(count = n())
 
-ggplot(genre_and_count, aes(x = genres, y = count)) +
+broj_filmova_po_zanru <-  ggplot(genre_and_count, aes(x = genres, y = count)) +
   geom_bar(stat = "identity", fill = "purple", color = "white") +
-  labs(title = "Broj filmova po žanru", x = "Žanr", y = "Broj filmova") +
+  labs(x = "Žanr", y = "Broj filmova") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
 ```
 
 
