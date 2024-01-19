@@ -1,0 +1,31 @@
+
+
+\chapter{Uvod}
+
+	 Cilj ovog projektnog zadatka detaljna je analiza odabranog skupa podataka. Skup podataka čine različiti atributi, a naš je zadatak doći do dubokog razumijevanja njihovih međusobnih odnosa i potencijalnih trendova. Sve to namjeravamo ostvariti kroz proces čišćenja podataka, statističke analize i vizualizacije. Za eksploratornu analizu odabran je podatkovni skup \textit{IMDb movie dataset} koji sadrži informacije o filmovima, uključujući ocjene, godine premijere, glumačku postavu i druge relevantne podatke, prikupljene s popularnog filmskog portala IMDb. Očekujemo da ćemo kroz analizu ovog skupa podataka istražiti i shvatiti karakteristike filmova, odnose između različitih atributa skupa te steći dublji uvid u svijet filmova.
+	 
+	 \section{Pregled i čišćenje podataka}
+	 
+	 Originalni skup podata \textit{IMDb movie dataset} sastoji se od ukupno 5043 zapisa s ukupno 28 atributa. Izvođenjem jednostavne naredbe 
+	 
+	 \lstinputlisting[language=R]{../R/007.R}
+	 
+	 \noindent utvrđeno je da duplicirani zapisi čine 45 redaka izvornog skupa. Duplicirani su redci izbačeni iz skupa i konačni se skup sastoji od 4998 zapisa. Prije eksportiranja uređenog skupa za daljnje korištenje tijekom analize, zbog lakšeg je snalaženja promijenjen i redoslijed stupaca. Redoslijed stupaca promijenjen je izvršavanjem sljedeće naredbe: 
+	 
+	 \lstinputlisting[language=R]{../R/008.R}
+	 
+	 \noindent Imena varijabli i opisi značenja mogu se provjeriti u tablici na web stranici Kaggle\footnote{https://www.kaggle.com/code/harshadeepvattikunta/predicting-movie-success}. Nakon navedenih izmjena, podatkovni je skup spreman za eksportiranje u \texttt{.csv} formatu. Sve daljnje analize provode se nad novodobivenom, \textit{očišćenom}, verzijom skupa podataka.  
+	 
+	 
+	 \section{Osnovne informacije o atributima podatkovnog \\ skupa}
+	 
+	 U ovom ćemo dijelu, s ciljem boljeg upoznavanja sa skupom podatka, provesti jednostavne analize nad podacima svakog stupca zasebno. 
+	 
+	 Najprije primjenom funkcije \texttt{sapply} saznajemo broj vrijednosti koje nedostaju (\textit{NA} vrijednosti) u svakom stupcu .... \# nadopuni umetanjem outputa kôda ili tablicom i dodaj sve svoje jednostavne grafove na odgovarajuće mjesto :)
+	 
+	 
+	 
+	 
+	 
+	 
+	\eject

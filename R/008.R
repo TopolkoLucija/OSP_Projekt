@@ -1,0 +1,2 @@
+new_order <- c('movie_title', 'duration', 'director_name', 'director_facebook_likes', 'actor_1_name', 'actor_1_facebook_likes', 'actor_2_name', 'actor_2_facebook_likes', 'actor_3_name', 'actor_3_facebook_likes', 'num_user_for_reviews', 'num_critic_for_reviews', 'num_voted_users', 'cast_total_facebook_likes', 'movie_facebook_likes', 'plot_keywords', 'facenumber_in_poster', 'color', 'genres', 'title_year', 'language', 'country', 'content_rating', 'aspect_ratio', 'movie_imdb_link', 'gross', 'budget', 'imdb_score')
+data <- data[, new_order]
