@@ -20,12 +20,51 @@
 	 
 	 U ovom ćemo dijelu, s ciljem boljeg upoznavanja sa skupom podatka, provesti jednostavne analize nad podacima svakog stupca zasebno. 
 	 
-	 Najprije primjenom funkcije \texttt{sapply} saznajemo broj vrijednosti koje nedostaju (\textit{NA} vrijednosti) u svakom stupcu .... \# nadopuni umetanjem outputa kôda ili tablicom i dodaj sve svoje jednostavne grafove na odgovarajuće mjesto :)
+	 Najprije primjenom funkcije \texttt{sapply} saznajemo broj vrijednosti koje nedostaju (\textit{NA} vrijednosti) u svakom stupcu.
+	 
+	 \begin{table}[H]
+	 	\centering
+	 	\caption{Broj nepoznatih vrijednosti po stupcu}
+	 	\label{missing-values}
+	 	\begin{tabular}{|l|c|l|c|}
+	 		\hline
+	 		\textbf{Stupac} & \textbf{Broj} & \textbf{Stupac} & \textbf{Broj} \\
+	 		\hline
+	 		\texttt{movie\_title} & 0 & \texttt{num\_user\_for\_reviews} & 21 \\
+	 		\hline
+	 		\texttt{duration} & 15 & \texttt{num\_critic\_for\_reviews} & 49 \\
+	 		\hline
+	 		\texttt{director\_name} & 103 & \texttt{num\_voted\_users} & 0 \\
+	 		\hline
+	 		\texttt{director\_facebook\_likes} & 103 & \texttt{cast\_total\_facebook\_likes} & 0 \\
+	 		\hline
+	 		\texttt{actor\_1\_name} & 7 & \texttt{movie\_facebook\_likes} & 0 \\
+	 		\hline
+	 		\texttt{actor\_1\_facebook\_likes} & 7 & \texttt{plot\_keywords} & 152 \\
+	 		\hline
+	 		\texttt{actor\_2\_name} & 13 & \texttt{facenumber\_in\_poster} & 13 \\
+	 		\hline
+	 		\texttt{actor\_2\_facebook\_likes} & 13 & \texttt{color} & 19 \\
+	 		\hline
+	 		\texttt{actor\_3\_name} & 23 & \texttt{genres} & 0 \\
+	 		\hline
+	 		\texttt{actor\_3\_facebook\_likes} & 23 & \texttt{title\_year} & 107 \\
+	 		\hline
+	 		\texttt{language} & 12 & \texttt{country} & 5 \\
+	 		\hline
+	 		\texttt{content\_rating} & 301 & \texttt{aspect\_ratio} & 327 \\
+	 		\hline
+	 		\texttt{movie\_imdb\_link} & 0 & \texttt{gross} & 874 \\
+	 		\hline
+	 		\texttt{budget} & 487 & \texttt{imdb\_score} & 0 \\
+	 		\hline
+	 	\end{tabular}
+	 \end{table}
 	 
 	 Podaci u stupcima s nazivom \texttt{actor\_n\_facebook\_likes}, \texttt{n} $= 1, 2, 3$,  sadrže podatke o broju \textit{lajkova} na Facebook stranici glumca \texttt{actor\_n\_name}, \texttt{n} $= 1, 2, 3$. Izdvajanjem imena glumaca i njihovih odgovarajućih brojeva \texttt{lajkova} te uzimajući u obzir samo najviši broj \textit{lajkova} za pojedinog glumca, dobivamo podatke o najpoznatijim glumcima (najpoznatiji u ovom kontekstu znači s najviše \textit{lajkova}). Imena i broj \textit{lajkova} pet najpoznatijih glumaca navedeni su u tablici \ref{najpoznatiji_glumci}. 
 	 
 	 
-	 \begin{table}[h]
+	 \begin{table}[H]
 	 	\centering
 	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
 	 	\begin{tabular}{|l|c|}
@@ -47,10 +86,55 @@
 	 	\label{najpoznatiji_glumci}
 	 \end{table}
 	 
+	 Također, na temelju podataka iz stupaca \texttt{actor\_n\_name}, \texttt{n} $= 1, 2, 3$ te \texttt{director\_name} izdvojili smo glumce i redatelje s najviše filmova. U tablici \ref{glumci_s_najvise_uloga} prikazan je popis 5 glumaca s najviše uloga, dok su u tablici \ref{redatelji_s_najvise_filmova} prikazani redatelji koji su režirali najviše filmova.
 	 
-	 Iz podataka sadržanih u stupcu nazvanom \texttt{cast\_total\_facebook\_likes} moguće je  identificirati filmove s najpoznatijom glumačkom postavom, to su filmovi navedeni u tablici \ref{najpoznatiji_casting}.
+	  \begin{table}[H]
+	 	\centering
+	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
+	 	\begin{tabular}{|l|c|}
+	 		\hline
+	 		\multicolumn{1}{|c|}{\textbf{Ime glumca}} & \multicolumn{1}{c|}{\textbf{Broj uloga}} \\
+	 		\hline
+	 		Robert De Niro & 54 \\
+	 		\hline
+	 		Morgan Freeman & 47 \\
+	 		\hline			
+	 		Bruce Willis & 40 \\
+	 		\hline		
+	 		Johnny Depp & 40 \\
+	 		\hline		
+	 		Matt Damon	& 38 \\
+	 		\hline
+	 	\end{tabular}
+	 	\caption{Glumci s najviše uloga}
+	 	\label{glumci_s_najvise_uloga}
+	 \end{table}
 	 
-	  \begin{table}[h]
+	 \begin{table}[H]
+	 	\centering
+	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
+	 	\begin{tabular}{|l|c|}
+	 		\hline
+	 		\multicolumn{1}{|c|}{\textbf{Ime redatelja}} & \multicolumn{1}{c|}{\textbf{Broj režija}} \\
+			 \hline
+			 Steven Spielberg & 26 \\
+			 \hline
+			 Woody Allen & 22 \\
+			 \hline			
+			 Clint Eastwood & 20 \\
+			 \hline		
+			 Martin Scorsese & 20 \\
+			 \hline		
+			 Ridley Scott & 17 \\
+			 \hline
+		 \end{tabular}
+		 \caption{Najčešći redatelji}
+		 \label{redatelji_s_najvise_filmova}
+	 \end{table}
+	 
+	 Iz podataka sadržanih u stupcu nazvanom \texttt{cast\_total\_facebook\_likes} moguće je  identificirati filmove s najpoznatijom glumačkom postavom, a to su filmovi navedeni u tablici \ref{najpoznatiji_casting}.
+	 
+	  \begin{table}[H]
 	 	\centering
 	 	\renewcommand{\arraystretch}{1.5}  
 	 	\begin{tabular}{|l|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|}
@@ -74,7 +158,7 @@
 	 
 	 Stupac \texttt{plot\_keywords} sastoji se od ključnih riječi koje opisuju radnju filma odvojenih znakom '$|$'. Razdvajanjem sadržaja stupca po znaku '$|$' izdvajamo pojedinačne ključne riječi i saznajemo koje su najčešće te ih navodimo u tablici \ref{keywords}.
 	 
-	 \begin{table}[h]
+	 \begin{table}[H]
 	 	\centering
 	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
 	 	\begin{tabular}{|l|c|l|c|}
@@ -124,11 +208,11 @@
 	 	\label{filmovi_godine}
 	 \end{figure}
 	 
-	 U stupcu \texttt{facenumber\_in\_poster} zapisan je broj glumaca koji se pojavljuju na plakatu filma. Za većinu filmova (njih ukupno 2136) taj je broj nula, a najveći broj glumaca na plakatu iznosi 43 (za film \textit{500 Days of Summer}). Prosječna je vrijednost atributa \texttt{facenumber\_in\_poster} 1.37. 
+	 U stupcu \texttt{facenumber\_in\_poster} zapisan je broj glumaca koji se pojavljuju na plakatu filma. Za većinu filmova (njih ukupno 2136) taj je broj nula, a najveći broj glumaca na plakatu iznosi 43 (za film \textit{500 Days of Summer}). Prosječna je vrijednost atributa \texttt{facenumber\_in\_poster} 1.37, a medijan 1.
 	 
 	 Za koju je dobnu skupinu film namijenjen sadržano je u stupcu \texttt{content\_rating}. Popis najčešćih starosnih ograničenja i njihova značenja dana su u tablici \ref{content_rating}.
 	 
-	 \begin{table}[h]
+	 \begin{table}[H]
 	 	\centering
 	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
 	 	\begin{tabular}{|c|c|l|}
@@ -165,7 +249,44 @@
 	 	\label{neuspjesno}
 	 \end{figure}
 	 
+	 Stupac \texttt{duration} sadrži podatke o trajanju filmova. Najkraći film iz našeg skupa podataka traje 7, a najduži 511 minuta. Prosječno film traje 107 minuta. Histogram na slici \ref{trajanje} prikazuje broj filmova u ovisnosti o njihovom trajanju. 
 	 
+	  \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/lucija_jednostavni/trajanje.png}
+	 	\caption{Broj filmova po trajanju}
+	 	\label{trajanje}
+	 \end{figure}
+	 
+	 \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/lucija_jednostavni/boja.png}
+	 	\caption{Podjela filmova po boji}
+	 	\label{boja}
+	 \end{figure}
+	 
+	 \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/lucija_jednostavni/drzava.png}
+	 	\caption{Podjela filmova po državi nastanka}
+	 	\label{drzava}
+	 \end{figure}
+	 
+	 \begin{figure}[H]
+		 \centering
+		 \includegraphics[width=15cm]{../figures/lucija_jednostavni/imdb.png}
+		 \caption{Podjela filmova po uspješnosti}
+		 \label{imdb}
+	 \end{figure}
+	 
+	 \begin{figure}[H]
+		 \centering
+		 \includegraphics[width=15cm]{../figures/lucija_jednostavni/jezik.png}
+		 \caption{Broj filmova s obzirom na jezik}
+		 \label{jezik}
+	 \end{figure}
+	 
+	
 	 
 	 
 	 

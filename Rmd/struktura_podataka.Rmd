@@ -30,15 +30,12 @@ describe(data[,c("duration", "director_facebook_likes", "actor_1_facebook_likes"
 ```
 
 
-```{r}
-skim(data)
-```
-
 
 ```{r}
 ggplot(data, aes(x = imdb_score)) +
   geom_histogram(bins=10, fill = "purple", color = "white", na.rm = TRUE) +
-  labs(title = "Ocjena filma", x = "IMDb score", y = "Broj filmova")
+  labs(x = "IMDb score", y = "Broj filmova") + scale_x_continuous(breaks = c(1,2,3,4,5,6,7,8,9,10))
+
 ```
 
 
@@ -53,6 +50,7 @@ max_duration <- max(data$duration, na.rm = TRUE)
 cat("Srednje trajanje filma:", mean_duration %>% round(2), "\n")
 cat("Najkraće trajanje filma:", min_duration %>% round(2), "\n")
 cat("Najduže trajanje filma:", max_duration %>% round(2), "\n")
+cat("Medijan trajanja filma:", median(data$duration, na.rm = TRUE) %>% round(2), "\n")
 
 ggplot(data, aes(x = duration)) +
   geom_histogram(binwidth=10, fill = "purple", color = "white", na.rm = TRUE) +
@@ -68,7 +66,7 @@ p75_duration <- quantile(data$duration, 0.75, na.rm = TRUE)
 ggplot(data, aes(x = duration)) +
   geom_histogram(binwidth = 10, fill = "purple", color = "white", na.rm = TRUE) +
   scale_x_continuous(limits = c(0, p75_duration + 50)) +  # Povećajte ograničenje x-osi
-  labs(title = "Trajanje filmova 75% kvantil", x = "Trajanje (minute)", y = "Broj filmova")
+  labs(x = "Trajanje (minute)", y = "Broj filmova")
 
 ```
 
@@ -115,7 +113,7 @@ quantile_budget <- quantile(data$budget, 0.75, na.rm = TRUE)
 subset_data <- data[data$budget < quantile_budget, ]
 
 ggplot(subset_data, aes(x = budget, y = imdb_score)) +
-  geom_point(color = "purple", size = 1) +
+  geom_smooth(method = 'loess', color = "purple", se = F)  +
   labs(x = "Budžet (dolari)",
        y = "IMDb Score")
 
@@ -126,7 +124,7 @@ ggplot(subset_data, aes(x = budget, y = imdb_score)) +
 ```{r}
 ggplot(na.omit(data), aes(x = color)) +
   geom_histogram(fill = "purple", color = "white", stat="count") +
-  labs(x = "Boja", y = "Broj filmova")
+  labs(x = "Boja", y = "Broj filmova") 
 ```
 
 *Država snimanja*
@@ -149,7 +147,7 @@ final_data <- bind_rows(top_countries, other_countries)
 
 ggplot(final_data, aes(x = country, y = count)) +
   geom_bar(stat = "identity", fill = "purple", color = "white") +
-  labs(title = "Država snimanja", x = "Država", y = "Broj filmova")
+  labs(x = "Država", y = "Broj filmova")
 
 ```
 
@@ -163,17 +161,19 @@ language_counts <- data %>%
   arrange(desc(count))
 
 top_languages <- language_counts %>%
-  slice(1:5)
+  slice(1:4)
 
 other_languages <- language_counts %>%
-  slice(6:n()) %>%
+  slice(5:n()) %>%
   summarise(language = "Other", count = sum(count))
 
 final_data <- bind_rows(top_languages, other_languages)
 
+table(final_data)
+
 ggplot(final_data, aes(x = language, y = count)) +
   geom_bar(stat = "identity", fill = "purple", color = "white") +
-  labs(title = "Jezik filma", x = "Jezik", y = "Broj filmova")
+  labs(x = "Jezik", y = "Broj filmova")
 
 ```
 
@@ -187,11 +187,10 @@ quantile_critic <- quantile(data$num_critic_for_reviews, 0.75, na.rm = TRUE)
 subset_data <- data[data$num_user_for_reviews < quantile_reviews & data$num_critic_for_reviews < quantile_critic, ]
 
 ggplot(subset_data, aes(x = num_user_for_reviews, y = num_critic_for_reviews)) +
-  geom_point(color = "purple", size = 1) +
+  geom_smooth(method = 'auto', color = "purple", se = F) +
   labs(
        x = "Broj recenzija",
        y = "Broj loših recenzija")
-  
 ```
 
 *Broj recenzija <-> ocjena* 
@@ -203,7 +202,7 @@ quantile_reviews <- quantile(data$num_user_for_reviews, 0.75, na.rm = TRUE)
 subset_data <- data[data$num_user_for_reviews < quantile_reviews, ]
 
 ggplot(subset_data, aes(x = num_user_for_reviews, y = imdb_score)) +
-  geom_point(color = "purple", size = 1) +
+  geom_smooth(method = 'auto', color = "purple", se = T) +
   labs(x = "Broj recenzija",
        y = "IMDb Score")
 
@@ -214,7 +213,7 @@ ggplot(subset_data, aes(x = num_user_for_reviews, y = imdb_score)) +
 ```{r}
   
 ggplot(data, aes(x = num_critic_for_reviews, y = imdb_score)) +
-  geom_point(color = "purple", size = 1) +
+  geom_smooth(method = 'auto', color = "purple", se = F) +
   labs(x = "Broj loših recenzija",
        y = "IMDb Score")
 
@@ -225,7 +224,7 @@ ggplot(data, aes(x = num_critic_for_reviews, y = imdb_score)) +
 ```{r}
 
 ggplot(data, aes(x = num_voted_users, y = imdb_score)) +
-  geom_point(color = "purple", size = 1) +
+  geom_smooth(method = 'auto', color = "purple", se = T) +
   labs(x = "Broj glasova",
        y = "IMDb Score")
 
@@ -241,9 +240,25 @@ quantile_voted <- quantile(data$num_voted_users, 0.75, na.rm = TRUE)
 subset_data <- data[data$num_user_for_reviews < quantile_reviews & data$num_voted_users < quantile_voted, ]
 
 ggplot(subset_data, aes(x = num_user_for_reviews, y = num_voted_users)) +
-  geom_point(color = "purple", size = 1) +
+  geom_smooth(method = 'loess', color = "purple", se = F) +
   labs(x = "Broj recenzija",
        y = "Broj glasova")
   
 ```
+
+```{r}
+median(data$facenumber_in_poster, na.rm = T)
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
