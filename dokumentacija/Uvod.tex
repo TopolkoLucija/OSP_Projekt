@@ -16,12 +16,158 @@
 	 
 	 \noindent Imena varijabli i opisi značenja mogu se provjeriti u tablici na web stranici Kaggle\footnote{https://www.kaggle.com/code/harshadeepvattikunta/predicting-movie-success}. Nakon navedenih izmjena, podatkovni je skup spreman za eksportiranje u \texttt{.csv} formatu. Sve daljnje analize provode se nad novodobivenom, \textit{očišćenom}, verzijom skupa podataka.  
 	 
-	 
-	 \section{Osnovne informacije o atributima podatkovnog \\ skupa}
+	 \section[Osnovne informacije o atributima podatkovnog skupa]{Osnovne informacije o atributima podatkovnog \\ skupa}
 	 
 	 U ovom ćemo dijelu, s ciljem boljeg upoznavanja sa skupom podatka, provesti jednostavne analize nad podacima svakog stupca zasebno. 
 	 
 	 Najprije primjenom funkcije \texttt{sapply} saznajemo broj vrijednosti koje nedostaju (\textit{NA} vrijednosti) u svakom stupcu .... \# nadopuni umetanjem outputa kôda ili tablicom i dodaj sve svoje jednostavne grafove na odgovarajuće mjesto :)
+	 
+	 Podaci u stupcima s nazivom \texttt{actor\_n\_facebook\_likes}, \texttt{n} $= 1, 2, 3$,  sadrže podatke o broju \textit{lajkova} na Facebook stranici glumca \texttt{actor\_n\_name}, \texttt{n} $= 1, 2, 3$. Izdvajanjem imena glumaca i njihovih odgovarajućih brojeva \texttt{lajkova} te uzimajući u obzir samo najviši broj \textit{lajkova} za pojedinog glumca, dobivamo podatke o najpoznatijim glumcima (najpoznatiji u ovom kontekstu znači s najviše \textit{lajkova}). Imena i broj \textit{lajkova} pet najpoznatijih glumaca navedeni su u tablici \ref{najpoznatiji_glumci}. 
+	 
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
+	 	\begin{tabular}{|l|c|}
+	 		\hline
+	 		\multicolumn{1}{|c|}{\textbf{Ime glumca}} & \multicolumn{1}{c|}{\textbf{Broj Facebook \textit{lajkova}}} \\
+	 		\hline
+	 		Darcy Donavan & 640,000 \\
+	 		\hline
+	 		Matthew Ziff & 260,000 \\
+	 		\hline			
+	 		Krista Allen & 164,000 \\
+	 		\hline		
+	 		Andrew Fiscella & 137,000 \\
+	 		\hline		
+	 		Jimmy Bennett & 87,000 \\
+	 		\hline
+	 	\end{tabular}
+	 	\caption{Najpoznatiji glumci}
+	 	\label{najpoznatiji_glumci}
+	 \end{table}
+	 
+	 
+	 Iz podataka sadržanih u stupcu nazvanom \texttt{cast\_total\_facebook\_likes} moguće je  identificirati filmove s najpoznatijom glumačkom postavom, to su filmovi navedeni u tablici \ref{najpoznatiji_casting}.
+	 
+	  \begin{table}[h]
+	 	\centering
+	 	\renewcommand{\arraystretch}{1.5}  
+	 	\begin{tabular}{|l|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{2.5cm}|}
+	 		\hline
+	 		\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{Naslov filma}}} & \textbf{Godina premijere} & \textbf{IMDB ocjena} & \textbf{Broj \textit{lajkova} postave} \\
+	 		\hline
+	 		Anchorman: The Legend of Ron Burgundy & 2004 & 7.2 & 656,730 \\
+	 		\hline
+	 		The Final Destination & 2009 & 5.2 & 303,717 \\
+	 		\hline
+	 		Treachery & 2013 & 3.9 & 283,939 \\
+	 		\hline
+	 		Hardflip & 2012 & 5.6 & 263,584 \\
+	 		\hline
+	 		Kickboxer: Vengeance & 2016 & 9.1 & 261,818 \\
+	 		\hline
+	 	\end{tabular}
+	 	\caption{Filmovi s najpoznatijom glumačkom postavom}
+	 	\label{najpoznatiji_casting}
+	 \end{table}
+	 
+	 Stupac \texttt{plot\_keywords} sastoji se od ključnih riječi koje opisuju radnju filma odvojenih znakom '$|$'. Razdvajanjem sadržaja stupca po znaku '$|$' izdvajamo pojedinačne ključne riječi i saznajemo koje su najčešće te ih navodimo u tablici \ref{keywords}.
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
+	 	\begin{tabular}{|l|c|l|c|}
+	 		\hline
+	 		\multicolumn{1}{|c|}{\textbf{Ključna riječ}} & \multicolumn{1}{c|}{\textbf{Broj filmova}} & \multicolumn{1}{c|}{\textbf{Ključna riječ}} & \multicolumn{1}{c|}{\textbf{Broj filmova}} \\
+	 		\hline
+	 		love & 194 & fbi & 71 \\
+	 		\hline
+	 		friend & 165 & revenge & 70 \\
+	 		\hline
+	 		murder & 159 & friendship & 67 \\
+	 		\hline
+	 		death & 132 & drugs & 66 \\
+	 		\hline
+	 		police & 126 & prison & 62 \\
+	 		\hline
+	 		new york city & 91 & money & 61 \\
+	 		\hline
+	 		high school & 89 & marriage & 60 \\
+	 		\hline
+	 		alien & 82 & female protagonist & 57 \\
+	 		\hline
+	 		school & 73 & island & 57\\
+	 		\hline
+	 		boy & 72 & dog & 56\\
+	 		\hline
+	 	\end{tabular}
+	 	\caption{Najčešće ključne riječi koje opisuju radnju filma}
+	 	\label{keywords}
+	 \end{table} 
+	 
+	 Sličan stupcu \texttt{plot\_keywords} stupac je \texttt{genres} koji, odvojene znakom '$|$', sadrži informacije o žanrovima filmova. Izdvajamo žanrove za svaki film i prikazujemo broj filmova po svakom od žanrova u histogramu na slici \ref{filmovi_zanr}.
+	 
+	 \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/analysis/broj_filmova_po_zanru.png}
+	 	\caption{Podjela filmova po žanru}
+	 	\label{filmovi_zanr}
+	 \end{figure}
+	 
+	 Stupac \texttt{title\_year} poprima vrijednosti od 1916 do 2016, a predstavlja godinu premijere filma. Koje je godine premijerno prikazano koliko filmova prikazano je na slici \ref{filmovi_godine}.
+	 
+	  \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/analysis/broj_filmova_po_godini.png}
+	 	\caption{Broj filmova po godini premijere}
+	 	\label{filmovi_godine}
+	 \end{figure}
+	 
+	 U stupcu \texttt{facenumber\_in\_poster} zapisan je broj glumaca koji se pojavljuju na plakatu filma. Za većinu filmova (njih ukupno 2136) taj je broj nula, a najveći broj glumaca na plakatu iznosi 43 (za film \textit{500 Days of Summer}). Prosječna je vrijednost atributa \texttt{facenumber\_in\_poster} 1.37. 
+	 
+	 Za koju je dobnu skupinu film namijenjen sadržano je u stupcu \texttt{content\_rating}. Popis najčešćih starosnih ograničenja i njihova značenja dana su u tablici \ref{content_rating}.
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
+	 	\begin{tabular}{|c|c|l|}
+	 		\hline
+	 		\multicolumn{1}{|c|}{\textbf{Ograničenje}} & \multicolumn{1}{c|}{\textbf{Broj filmova}} & \multicolumn{1}{c|}{\textbf{Značenje}} \\
+	 		\hline
+	 		R & 2098 & Za osobe starije od 17 godina \\
+	 		\hline 
+	 		PG-13 & 1444 & Za osobe starije od 13 godina \\
+	 		\hline
+	 		PG & 688 & Za osobe starije od 8 godina \\
+	 		\hline
+	 	\end{tabular}
+	 	\caption{Najčešća starosna ograničenja filmova}
+	 	\label{content_rating}
+	 \end{table}
+	 
+	 Omjer širine i visine (proporcije) filmske slike za pojedini film zapisan je u stupcu \texttt{aspect\_ratio}. U skupu podataka pojavljuje se ukupno 23 različitih omjera, a za sedam najčešćih napravljen je pregled (slika \ref{proporcije}) kretanja broja filmova s tim proporcijama po godinama. 
+	 
+	  \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/analysis/proporcije_i_godine.png}
+	 	\caption{Broj filmova s najčešćim proporcijama filmske slike po godinama }
+	 	\label{proporcije}
+	 \end{figure}
+	 
+	 U stupcima \texttt{budget} i \texttt{gross} nalaze se podaci o budžetu filma i ukupnoj bruto zaradi filma u američkim dolarima. Koliki je postotak filmova svake godine ostvario manju zaradu od iznosa budžeta prikazujemo na slici \ref{neuspjesno}.
+	 
+	 
+	 \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=15cm]{../figures/analysis/prihod_manji_od_budzeta.png}
+	 	\caption{Postotak filmova koji su ostvarili manji prihoda od iznosa budžeta}
+	 	\label{neuspjesno}
+	 \end{figure}
+	 
+	 
+	 
+	 
 	 
 	 
 	 
