@@ -2,12 +2,13 @@
 \contentsline {chapter}{\numberline {1}Uvod}{2}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Pregled i čišćenje podataka}{2}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Osnovne informacije o atributima podatkovnog skupa}{3}{section.1.2}%
-\contentsline {chapter}{\numberline {2}Naprednije analize podataka}{12}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Proučavanje međusobne ovisnosti atributa}{12}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Dodatne zanimljive vizualizacije}{14}{section.2.2}%
-\contentsline {chapter}{\numberline {3}Prediktivni modeli primjenom strojnog učenja}{15}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Priprema podataka}{15}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Modeli s nebalansiranim skupom podataka}{16}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Modeli s balansiranim skupom podataka}{18}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Atributi najznačajniji za predviđanje}{21}{section.3.4}%
-\contentsline {chapter}{Indeks slika i dijagrama}{24}{chapter*.2}%
+\contentsline {chapter}{\numberline {2}Naprednije analize podataka}{11}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Proučavanje međusobne ovisnosti atributa}{11}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Dodatne zanimljive vizualizacije}{13}{section.2.2}%
+\contentsline {chapter}{\numberline {3}Prediktivni modeli primjenom strojnog učenja}{16}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Priprema podataka}{16}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Modeli s nebalansiranim skupom podataka}{17}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Modeli s balansiranim skupom podataka}{19}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Atributi najznačajniji za predviđanje}{22}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Zaključak}{25}{chapter.4}%
+\contentsline {chapter}{Indeks slika i dijagrama}{26}{chapter*.2}%
