@@ -24,11 +24,10 @@
 	 
 	 \begin{table}[H]
 	 	\centering
-	 	\caption{Broj nepoznatih vrijednosti po stupcu}
-	 	\label{missing-values}
+	 	\renewcommand{\arraystretch}{1.5} % Adjust the value to increase or decrease row spacing
 	 	\begin{tabular}{|l|c|l|c|}
 	 		\hline
-	 		\textbf{Stupac} & \textbf{Broj} & \textbf{Stupac} & \textbf{Broj} \\
+	 		\multicolumn{1}{|c|}{\textbf{Stupac}} & \multicolumn{1}{c|}{\textbf{Broj}} & \multicolumn{1}{c|}{\textbf{Stupac}} & \multicolumn{1}{c|}{\textbf{Broj}} \\
 	 		\hline
 	 		\texttt{movie\_title} & 0 & \texttt{num\_user\_for\_reviews} & 21 \\
 	 		\hline
@@ -59,6 +58,8 @@
 	 		\texttt{budget} & 487 & \texttt{imdb\_score} & 0 \\
 	 		\hline
 	 	\end{tabular}
+	 	\caption{Broj \textit{NA} vrijednosti po stupcima}
+	 	\label{na}
 	 \end{table}
 	 
 	 Podaci u stupcima s nazivom \texttt{actor\_n\_facebook\_likes}, \texttt{n} $= 1, 2, 3$,  sadrže podatke o broju \textit{lajkova} na Facebook stranici glumca \texttt{actor\_n\_name}, \texttt{n} $= 1, 2, 3$. Izdvajanjem imena glumaca i njihovih odgovarajućih brojeva \texttt{lajkova} te uzimajući u obzir samo najviši broj \textit{lajkova} za pojedinog glumca, dobivamo podatke o najpoznatijim glumcima (najpoznatiji u ovom kontekstu znači s najviše \textit{lajkova}). Imena i broj \textit{lajkova} pet najpoznatijih glumaca navedeni su u tablici \ref{najpoznatiji_glumci}. 
